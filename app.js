@@ -9,6 +9,8 @@ const resized_image = document.querySelector("#resized_image")
 const size = document.querySelectorAll('.size')
 const canvas = document.querySelector('#canvas')
 const resizedLink = document.querySelector('#resized_link')
+const original_image = document.querySelector('#original_image')
+const imageFormat = document.querySelector('#image_format')
 
 const img = new Image()
 const ctx = canvas.getContext('2d')
@@ -30,6 +32,8 @@ function updateCanvasAndUrl(image, quality_flag=false) {
    
     const imageQuality = parseInt(quality.value) / 100
 
+    console.log(imageFormat.value)
+
     canvas.toBlob(function(blob) {
         downloadLink.href = URL.createObjectURL(blob)
         resizedLink.style.display = 'inline'
@@ -40,11 +44,12 @@ function updateCanvasAndUrl(image, quality_flag=false) {
                 updateCanvasAndUrl(img_r, false)
             }
         }
-        }, "image/jpeg", imageQuality)
+        }, imageFormat.value, imageQuality)
 }
 
 imageFile.addEventListener('change', (e) => {
     img.onload = function() {
+        original_image.style.display = 'inline'
         updateImageSizeValues(img.width, img.height)
         updateCanvasAndUrl(img)
     }
@@ -52,14 +57,24 @@ imageFile.addEventListener('change', (e) => {
     uploaded_image_div.appendChild(img)
 })
 
-//detect every change of size values
+
+imageFormat.addEventListener('change', (e) => {
+    
+    if(e.target.value !=='image/jpeg') {
+        quality.classList.add('disabled')
+    } else {
+        quality.classList.remove('disabled')
+    }
+    updateCanvasAndUrl(img, true)
+})
+
 resize_width.addEventListener('input', (e) => {
     if(!e.target.value) return
-    updateCanvasAndUrl(img)
+    updateCanvasAndUrl(img, true)
 })
 resize_height.addEventListener('input', (e) => {
     if(!e.target.value) return
-    updateCanvasAndUrl(img)
+    updateCanvasAndUrl(img, true)
 })
 
 quality.addEventListener('input', (e) => {

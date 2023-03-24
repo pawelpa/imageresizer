@@ -65,6 +65,10 @@ body {
    flex-direction: column;
 }
 
+#original_image {
+    display: none;
+}
+
 input[type=text] {
     height: 30px;
     width: 60px;
@@ -86,6 +90,9 @@ label {
 .m-top {
     margin-top: 40px;
 }
+.font-custom {
+    font-size: 1.2rem;
+}
 
 a {
     text-decoration: none;
@@ -97,8 +104,8 @@ a:hover {
 
 .flex-custom {
     display: flex;
-    align-items: center ;
-    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
 }
 
 .flex-custom input {
@@ -114,4 +121,32 @@ span {
 
 #resized_link {
     display: none;
+}
+
+#inputs {
+    margin-top: 20px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 20px;
+    /* width: 300px; */
+}
+
+select {
+    background-color:darkslategray;
+    color: white;
+    font-size: 1.1rem;
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+option {
+    font-size: 1.1rem;
+    background-color: darkslategray;
+    color: white;
+}
+
+.disabled {
+    background-color: gray;
+    color: black;
 }
