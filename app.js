@@ -62,8 +62,10 @@ imageFormat.addEventListener('change', (e) => {
     
     if(e.target.value !=='image/jpeg') {
         quality.classList.add('disabled')
+        quality.setAttribute('disabled', true)
     } else {
         quality.classList.remove('disabled')
+        quality.removeAttribute('disabled')
     }
     updateCanvasAndUrl(img, true)
 })
