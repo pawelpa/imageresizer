@@ -1,7 +1,7 @@
 const imageFile = document.querySelector("#image")
 const downloadLink = document.querySelector("#download")
 const drop_area = document.querySelector(".drop_area")
-const uploaded_image_div = document.querySelector("#uploaded_image_div")
+const uploaded_image = document.querySelector("#uploaded_image")
 const resize_width = document.querySelector("#resize_width")
 const resize_height = document.querySelector("#resize_height")
 const quality = document.querySelector('#quality')
@@ -11,6 +11,8 @@ const canvas = document.querySelector('#canvas')
 const resizedLink = document.querySelector('#resized_link')
 const original_image = document.querySelector('#original_image')
 const imageFormat = document.querySelector('#image_format')
+const original_size = document.querySelector("#original_size")
+const custom_size = document.querySelector("#custom_size")
 
 const img = new Image()
 const ctx = canvas.getContext('2d')
@@ -37,6 +39,7 @@ function updateCanvasAndUrl(image, quality_flag=false) {
     canvas.toBlob(function(blob) {
         downloadLink.href = URL.createObjectURL(blob)
         resizedLink.style.display = 'inline'
+        custom_size.textContent =  Math.round(parseInt(blob.size) / 1024) + " KB"
         if(quality_flag){
             const img_r = new Image()
             img_r.src = URL.createObjectURL(blob)
@@ -50,11 +53,13 @@ function updateCanvasAndUrl(image, quality_flag=false) {
 imageFile.addEventListener('change', (e) => {
     img.onload = function() {
         original_image.style.display = 'inline'
-        updateImageSizeValues(img.width, img.height)
+        updateImageSizeValues(img.naturalWidth, img.naturalHeight)
         updateCanvasAndUrl(img)
     }
+    console.log(e.target.files[0])
     img.src = URL.createObjectURL(e.target.files[0])
-    uploaded_image_div.appendChild(img)
+    original_size.textContent =  Math.round(parseInt(e.target.files[0].size) / 1024) + " KB"
+    uploaded_image.appendChild(img)
 })
 
 
