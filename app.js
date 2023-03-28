@@ -23,70 +23,90 @@ function updateImageSizeValues(width,height) {
     quality.value = 100
 }
 
-function updateCanvasAndUrl(image, quality_flag=false) {
- 
+function calculateImageSize(size) {
+    return (Number(size) / 1024).toFixed(2) + " KB"
+}
+
+
+function updateCanvas(image) {
     canvas.width = parseInt(resize_width.value)
-    canvas.height = parseInt(resize_height.value)
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    
+    canvas.height = parseInt(resize_height.value) 
+    ctx.clearRect(0, 0, canvas.width, canvas.height)  
     ctx.drawImage(image, 0, 0, parseInt(resize_width.value), parseInt(resize_height.value))
-   
+}
+
+function updateUrl(image, quality_flag = true) {
     const imageQuality = parseInt(quality.value) / 100
-
     console.log(imageFormat.value)
+    canvas.toBlob(
+      function (blob) {
+        downloadLink.href = URL.createObjectURL(blob);
+        resizedLink.style.display = "inline";
+        custom_size.textContent = calculateImageSize(blob.size);
+        if(quality_flag) {
 
-    canvas.toBlob(function(blob) {
-        downloadLink.href = URL.createObjectURL(blob)
-        resizedLink.style.display = 'inline'
-        custom_size.textContent =  Math.round(parseInt(blob.size) / 1024) + " KB"
-        if(quality_flag){
-            const img_r = new Image()
-            img_r.src = URL.createObjectURL(blob)
-            img_r.onload = function() {
-                updateCanvasAndUrl(img_r, false)
+            const img_r = new Image();
+            img_r.src = URL.createObjectURL(blob);
+            img_r.onload = function () {
+                updateCanvas(img_r);
+                updateUrl(img_r, false)
+                URL.revokeObjectURL(img_r.src);
             }
         }
-        }, imageFormat.value, imageQuality)
+      },
+      imageFormat.value,
+      imageQuality
+    );
 }
 
 imageFile.addEventListener('change', (e) => {
     img.onload = function() {
         original_image.style.display = 'inline'
         updateImageSizeValues(img.naturalWidth, img.naturalHeight)
-        updateCanvasAndUrl(img)
+        // updateCanvasAndUrl(img)
+        updateCanvas(img)
+        updateUrl(img)
+        URL.revokeObjectURL(img.src)
     }
     console.log(e.target.files[0])
     img.src = URL.createObjectURL(e.target.files[0])
-    original_size.textContent =  Math.round(parseInt(e.target.files[0].size) / 1024) + " KB"
+    original_size.textContent =  calculateImageSize(e.target.files[0].size)
     uploaded_image.appendChild(img)
 })
 
 
 imageFormat.addEventListener('change', (e) => {
     
-    if(e.target.value !=='image/jpeg') {
+    if(e.target.value ==='image/png') {
         quality.classList.add('disabled')
         quality.setAttribute('disabled', true)
     } else {
         quality.classList.remove('disabled')
         quality.removeAttribute('disabled')
     }
-    updateCanvasAndUrl(img, true)
+    // updateCanvasAndUrl(img, true)
+    updateCanvas(img)
+    updateUrl(img)
 })
 
 resize_width.addEventListener('input', (e) => {
     if(!e.target.value) return
-    updateCanvasAndUrl(img, true)
+    // updateCanvasAndUrl(img, true)
+    updateCanvas(img)
+    updateUrl(img)
 })
 resize_height.addEventListener('input', (e) => {
     if(!e.target.value) return
-    updateCanvasAndUrl(img, true)
+    // updateCanvasAndUrl(img, true)
+    updateCanvas(img)
+    updateUrl(img)
 })
 
 quality.addEventListener('input', (e) => {
     if(!e.target.value) return
-    updateCanvasAndUrl(img, true)
+    // updateCanvasAndUrl(img, true)
+    updateCanvas(img)
+    updateUrl(img)
 })
 
 drop_area.addEventListener('dragover', function(e) {
