@@ -37,14 +37,12 @@ function updateCanvas(image) {
 
 function updateUrl(image, quality_flag = true) {
     const imageQuality = parseInt(quality.value) / 100
-    console.log(imageFormat.value)
     canvas.toBlob(
       function (blob) {
         downloadLink.href = URL.createObjectURL(blob);
         resizedLink.style.display = "inline";
         custom_size.textContent = calculateImageSize(blob.size);
         if(quality_flag) {
-
             const img_r = new Image();
             img_r.src = URL.createObjectURL(blob);
             img_r.onload = function () {
@@ -61,14 +59,13 @@ function updateUrl(image, quality_flag = true) {
 
 imageFile.addEventListener('change', (e) => {
     img.onload = function() {
+        
         original_image.style.display = 'inline'
         updateImageSizeValues(img.naturalWidth, img.naturalHeight)
-        // updateCanvasAndUrl(img)
         updateCanvas(img)
         updateUrl(img)
         URL.revokeObjectURL(img.src)
     }
-    console.log(e.target.files[0])
     img.src = URL.createObjectURL(e.target.files[0])
     original_size.textContent =  calculateImageSize(e.target.files[0].size)
     uploaded_image.appendChild(img)
