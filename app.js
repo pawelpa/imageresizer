@@ -106,6 +106,10 @@ quality.addEventListener('input', (e) => {
     updateUrl(img)
 })
 
+canvas.addEventListener('click', function(e) {
+    this.classList.toggle('scale_original')
+})
+
 drop_area.addEventListener('dragover', function(e) {
     this.classList.add('dragover')
 })
